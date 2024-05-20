@@ -38,7 +38,8 @@
     "mathjax-full": "^3.1.4",
     "react": "*",
     "react-native": "*",
-    "transformation-matrix": "^2.11.1"
+    "transformation-matrix": "^2.11.1",
+    "react-native-markdown-display": "^7.0.2"
   },
   "peerDependencies": {
     "react-native": "*",
