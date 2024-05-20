@@ -130,3 +130,26 @@ Check out [react-math-view](https://github.com/ShaMan123/react-math-view#react-m
 [SSR](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}):\
 ![\Large x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}](https://latex.codecogs.com/svg.latex?\Large&space;x=\frac{-b\pm\sqrt{b^2-4ac}}{2a})
 
+## Markdown Support Update
+
+`<MathText>` Component can now render markdown instead of text. This needs to be triggered with boolean `isMarkdown = True`. It can also pass down contentStyle props.
+
+```tsx
+import MathView, { MathText } from 'react-native-math-view';
+
+  return (
+    ...
+	<MathText
+            value={`This text includes math notations, **markdown**, and should be wrapped correctly for \\( \\alpha \\) and $\\beta$ within the view. \nThe following formula shouldn't be inline:$$x_{1,2} = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$$However the following formula should be inline with the text: \\( a^2 + b^2 = c^2 \\)`}
+            direction="ltr"
+            CellRendererComponent={<TouchableOpacity />}
+            style={containerStyle}
+            contentStyle={contentStyle}
+            isMarkdown={true}
+        />
+
+    ...
+  );
+```
+
+Note: When using markdown mode (`isMarkdown = True`) the line height of all text will generally increase. This is likely due to how the markdown renderer works.
