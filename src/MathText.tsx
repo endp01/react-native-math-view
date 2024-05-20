@@ -2,6 +2,7 @@
 import _ from 'lodash';
 import React, { useMemo } from 'react';
 import { I18nManager, StyleProp, StyleSheet, Text, TextProps, View, ViewStyle } from 'react-native';
+import Markdown from "react-native-markdown-display";
 import { MathViewProps } from './common';
 //@ts-ignore
 import MathView from './MathView';
@@ -23,12 +24,15 @@ export type MathTextItemProps<T extends boolean = boolean> = (T extends true ? O
     isMath: T,
     Component?: MathView,
     CellRendererComponent?: ElementOrRenderer,
-    inline?: boolean
+    inline?: boolean,
+    isMarkdown?: boolean,
+    contentStyle?: StyleProp<ViewStyle>,
 }
 
 export type MathTextRowProps = MathTextItemProps & {
     direction?: Direction,
     containerStyle?: StyleProp<ViewStyle>,
+    contentStyle?: StyleProp<ViewStyle>,
     index: number,
     renderItem?: (props: MathTextItemRenderingProps) => JSX.Element
 }
@@ -40,28 +44,36 @@ export type MathTextProps = Pick<MathTextRowProps, 'direction' | 'containerStyle
     renderRow?: (props: MathTextRowRenderingProps) => JSX.Element
 }
 
-export const InlineMathItem = React.memo(({ value, isMath, CellRendererComponent, Component, inline, style, ...props }: MathTextItemProps) => {
+export const InlineMathItem = React.memo(({ value, isMath, CellRendererComponent, Component, inline, style, isMarkdown, contentStyle, ...props }: MathTextItemProps) => {
     if (value === '') return null;
     const config = useMemo(() => ({ inline }), [inline]);
     const Renderer = Component || MathView;
+    const TextRenderer = isMarkdown ? Markdown : Text;
+    const markdownProps = isMarkdown ? {
+        style: {
+            body: contentStyle ? contentStyle : styles.textMiddle
+        }
+    } : {};
+    const textStyle = contentStyle ? contentStyle : styles.textMiddle
     const el = isMath ?
         <Renderer
             {...props}
             math={value}
             resizeMode='contain'
             config={config}
+            style={textStyle}
         /> :
-        <Text
+        <TextRenderer
             {...props}
-            style={styles.textMiddle}
+            {...markdownProps}
         >
             {value}
-        </Text>;
+        </TextRenderer>;
     const container = typeof CellRendererComponent === 'function' ? <CellRendererComponent /> : CellRendererComponent || <></>;
     return React.cloneElement(container, {}, el);
 });
 
-export const MathTextRow = React.memo(({ value, isMath, direction, containerStyle, CellRendererComponent, renderItem, index, ...props }: MathTextRowProps) => {
+export const MathTextRow = React.memo(({ value, isMath, direction, containerStyle, CellRendererComponent, renderItem, index, isMarkdown, contentStyle, ...props }: MathTextRowProps) => {
     const parts = useMemo(() => _.flatten(_.map(_.split(value, /\$+/g), (value, i) => {
         if (isMath || i % 2 === 1) {
             return [{ value, isMath: true, inline: !isMath }];
@@ -88,6 +100,8 @@ export const MathTextRow = React.memo(({ value, isMath, direction, containerStyl
                         CellRendererComponent={CellRendererComponent}
                         index={i}
                         rowIndex={index}
+                        isMarkdown={isMarkdown}
+                        contentStyle={contentStyle}
                     />;
                     return React.cloneElement(i === parts.length - 1 ? el : <>{el}<Text> </Text></>, { key: `InlineMath.${value}.${i}` });
                 })
