@@ -151,5 +151,3 @@ import MathView, { MathText } from 'react-native-math-view';
     ...
   );
 ```
-
-Note: When using markdown mode (`isMarkdown = True`) the line height of all text will generally increase. This is likely due to how the markdown renderer works.
