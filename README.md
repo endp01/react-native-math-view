@@ -142,7 +142,7 @@ import MathView, { MathText } from 'react-native-math-view';
 	<MathText
             value={`This text includes math notations, **markdown**, and should be wrapped correctly for \\( \\alpha \\) and $\\beta$ within the view. \nThe following formula shouldn't be inline:$$x_{1,2} = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}$$However the following formula should be inline with the text: \\( a^2 + b^2 = c^2 \\)`}
             direction="ltr"
-            CellRendererComponent={<TouchableOpacity />}
+            CellRendererComponent={<View style={mathTextCellRendererStyle} />}
             style={containerStyle}
             contentStyle={contentStyle}
             isMarkdown={true}
