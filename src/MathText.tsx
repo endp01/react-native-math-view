@@ -103,7 +103,7 @@ export const MathTextRow = React.memo(({ value, isMath, direction, containerStyl
                         isMarkdown={isMarkdown}
                         contentStyle={contentStyle}
                     />;
-                    return React.cloneElement(i === parts.length - 1 ? el : <>{el}<Text> </Text></>, { key: `InlineMath.${value}.${i}` });
+                    return React.cloneElement(i === parts.length - 1 ? el : <>{el}<Text style={contentStyle}> </Text></>, { key: `InlineMath.${value}.${i}` });
                 })
             }
         </View>
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
         display: 'flex',
         flexDirection: 'row',
-        marginVertical: 10
+        // marginVertical: 10 // remove margin as our input uses \n 
     },
     textMiddle: {
         textAlignVertical: 'center'
